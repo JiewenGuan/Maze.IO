@@ -1,17 +1,20 @@
 import { BoxGeometry, Group, Mesh, MeshPhongMaterial } from "three";
+import { Random } from "./utils.js";
 
 export class Maze {
-    constructor(width = 10, height = 10) {
+    constructor(width = 10, height = 10, seed = 10) {
         this.width = width;
         this.height = height;
+        this.seed = seed;
         this.cellWidth = 1.0;
         this.wallthickness = 0.1;
         this.wallHeight = 1.0;
         this.totalWidth = (this.wallthickness + this.cellWidth) * this.width;
         this.totalHeight = (this.wallthickness + this.cellWidth) * this.height;
-        this.init()
+        this.init();
     }
-    init(){
+    init() {
+        this.random = new Random(this.seed);
         this.fa = {};
         this.map = [];
         for (let i = 0; i < this.height * 2 + 1; i++) {
@@ -26,23 +29,29 @@ export class Maze {
                 for (let j = 1; j < this.width * 2; j++) {
                     if (j % 2 == 1) {
                         this.map[i][j] = 0;
-                        this.fa[[i,j]]=[i,j];
+                        this.fa[[i, j]] = [i, j];
                     }
                 }
             }
         }
     }
     arround(e) {
-        let ret = []
-        if(e[0]% 2 == 1){
-            ret = [[e[0], e[1] - 1], [e[0], e[1] + 1]]
-        }else{
-            ret = [[e[0] - 1, e[1]], [e[0] + 1, e[1]]]
+        let ret = [];
+        if (e[0] % 2 == 1) {
+            ret = [
+                [e[0], e[1] - 1],
+                [e[0], e[1] + 1],
+            ];
+        } else {
+            ret = [
+                [e[0] - 1, e[1]],
+                [e[0] + 1, e[1]],
+            ];
         }
-        return ret
+        return ret;
     }
     find(p1) {
-        if(p1 != this.fa[p1]){
+        if (p1 != this.fa[p1]) {
             this.fa[p1] = this.find(this.fa[p1]);
         }
         return this.fa[p1];
@@ -50,7 +59,7 @@ export class Maze {
     union(p1, p2) {
         let root1 = this.find(p1);
         let root2 = this.find(p2);
-        this.fa[root1]=root2
+        this.fa[root1] = root2;
     }
     generate() {
         let cue = [];
@@ -65,7 +74,8 @@ export class Maze {
             }
         }
         while (cue.length > 0) {
-            let index = Math.floor(Math.random() * cue.length);
+            //let index = Math.floor(Math.random() * cue.length);
+            let index = this.random.getint(0, cue.length - 1);
             let e = cue.splice(index, 1)[0];
             let ard = this.arround(e);
             if (this.find(ard[0]) != this.find(ard[1])) {
