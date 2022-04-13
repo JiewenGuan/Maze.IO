@@ -1,16 +1,27 @@
-import { BoxGeometry, Group, Mesh, MeshPhongMaterial } from "three";
+import {
+    BoxGeometry,
+    Group,
+    Mesh,
+    MeshPhongMaterial,
+    Vector2,
+    SphereGeometry,
+} from "./three.js";
 import { Random } from "./utils.js";
 
 export class Maze {
     constructor(width = 10, height = 10, seed = 10) {
+        window.maze = this;
         this.width = width;
         this.height = height;
         this.seed = seed;
         this.cellWidth = 1.0;
         this.wallthickness = 0.1;
-        this.wallHeight = 1.0;
+        this.wallHeight = 1;
+        this.cellHeight = 0.1;
         this.totalWidth = (this.wallthickness + this.cellWidth) * this.width;
         this.totalHeight = (this.wallthickness + this.cellWidth) * this.height;
+        this.start = new Vector2();
+        this.goal = new Vector2();
         this.init();
     }
     init() {
@@ -74,7 +85,6 @@ export class Maze {
             }
         }
         while (cue.length > 0) {
-            //let index = Math.floor(Math.random() * cue.length);
             let index = this.random.getint(0, cue.length - 1);
             let e = cue.splice(index, 1)[0];
             let ard = this.arround(e);
@@ -83,6 +93,15 @@ export class Maze {
                 this.map[e[0]][e[1]] = 0;
             }
         }
+        while (this.manhattanDistance() < (this.width + this.height)*0.75) {
+            this.start.x = this.random.getint(0, this.width - 1);
+            this.start.y = this.random.getint(0, this.height - 1);
+            this.goal.x = this.random.getint(0, this.width - 1);
+            this.goal.y = this.random.getint(0, this.height - 1);
+        }
+    }
+    manhattanDistance() {
+        return this.start.manhattanDistanceTo(this.goal);
     }
     print() {
         for (let i = 0; i < this.map.length; i++) {
@@ -98,23 +117,22 @@ export class Maze {
         let group = new Group();
         for (let i = 0; i < this.map.length; i++) {
             for (let j = 0; j < this.map[i].length; j++) {
+                let namestr = `X${i}Y${j}`;
                 let cubeX = this.wallthickness;
                 let cubeY = this.wallthickness;
-                let cubeZ = this.wallthickness;
+                let cubeZ = this.cellHeight;
 
-                let posX =
-                    ((this.cellWidth + this.wallthickness) / 2) * j -
-                    this.totalWidth / 2;
-                let posY =
-                    ((this.cellWidth + this.wallthickness) / 2) * i -
-                    this.totalHeight / 2;
+                let posX = this.tdist(j) - this.totalWidth / 2;
+                let posY = this.tdist(i) - this.totalHeight / 2;
                 let color = 0;
 
                 if (this.map[i][j] == 0) {
                     color = 0xffffff;
+                    namestr += "Cell";
                 } else if (this.map[i][j] == 1) {
                     color = 0x000000;
                     cubeZ = this.wallHeight;
+                    namestr += "Wall";
                 }
 
                 if (i % 2 == 1) {
@@ -127,10 +145,39 @@ export class Maze {
                 let material = new MeshPhongMaterial({ color: color });
                 let geometry = new BoxGeometry(cubeX, cubeY, cubeZ);
                 let mesh = new Mesh(geometry, material);
+                mesh.name = namestr;
                 mesh.position.set(posX, posY, 0);
                 group.add(mesh);
             }
         }
+        //add start and goal
+        //get coordinates
+        let startX =
+            this.tdist(this.tCorrd(this.start.x)) - this.totalWidth / 2;
+
+        let startY =
+            this.tdist(this.tCorrd(this.start.y)) - this.totalHeight / 2;
+        let material = new MeshPhongMaterial({ color: 0x00ff00 });
+        let geometry = new SphereGeometry(0.5);
+        let startmesh = new Mesh(geometry, material);
+        startmesh.name = "start";
+        startmesh.position.set(startX, startY, 0);
+        group.add(startmesh);
+
+        let goalX = this.tdist(this.tCorrd(this.goal.x)) - this.totalWidth / 2;
+        let goalY = this.tdist(this.tCorrd(this.goal.y)) - this.totalHeight / 2;
+        let material2 = new MeshPhongMaterial({ color: 0xff0000 });
+        let geometry2 = new SphereGeometry(0.5);
+        let goalmesh = new Mesh(geometry2, material2);
+        goalmesh.name = "goal";
+        goalmesh.position.set(goalX, goalY, 0);
+        group.add(goalmesh);
         return group;
+    }
+    tCorrd(input) {
+        return input * 2 + 1;
+    }
+    tdist(input) {
+        return ((this.cellWidth + this.wallthickness) / 2) * input;
     }
 }

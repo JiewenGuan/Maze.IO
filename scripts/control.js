@@ -1,6 +1,6 @@
 import { Maze } from "./maze.js";
 import { GUI } from "./lilgui.js";
-import { Group } from "three";
+import { Group } from "./three.js";
 
 export class Control {
     constructor(scene) {
@@ -28,7 +28,7 @@ export class Control {
         this.maze = new Maze(this.obj.Width,this.obj.Height,this.obj.Seed)
         this.maze.init();
         this.maze.generate();
-        this.group.add(this.maze.toGroup());
+        this.group.children = this.maze.toGroup().children;
     }
     
 }

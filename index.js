@@ -4,13 +4,13 @@ import {
     PointLight,
     Scene,
     WebGLRenderer,
-} from "three";
+} from "./scripts/three.js";
 
 import { OrbitControls } from "./scripts/orbit.js";
 import { Control } from "./scripts/control.js";
 
 let scene = new Scene();
-
+window.scene = scene;
 let control = new Control(scene);
 
 scene.background = new Color(0x888888);
