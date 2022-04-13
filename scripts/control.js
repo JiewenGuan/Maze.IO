@@ -1,5 +1,5 @@
 import { Maze } from "./maze.js";
-import { GUI } from "/scripts/lilgui.js";
+import { GUI } from "./lilgui.js";
 import { Group } from "three";
 
 export class Control {

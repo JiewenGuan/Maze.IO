@@ -1,14 +1,13 @@
 import {
     Color,
-    Group,
     PerspectiveCamera,
     PointLight,
     Scene,
     WebGLRenderer,
 } from "three";
 
-import { OrbitControls } from "/scripts/orbit.js";
-import { Control } from "/scripts/control.js";
+import { OrbitControls } from "./orbit.js";
+import { Control } from "./control.js";
 
 let scene = new Scene();
 
