@@ -93,7 +93,7 @@ export class Maze {
                 this.map[e[0]][e[1]] = 0;
             }
         }
-        while (this.manhattanDistance() < (this.width + this.height)*0.75) {
+        while (this.manhattanDistance() < (this.width + this.height)*0.6) {
             this.start.x = this.random.getint(0, this.width - 1);
             this.start.y = this.random.getint(0, this.height - 1);
             this.goal.x = this.random.getint(0, this.width - 1);
@@ -150,8 +150,7 @@ export class Maze {
                 group.add(mesh);
             }
         }
-        //add start and goal
-        //get coordinates
+        
         let startX =
             this.tdist(this.tCorrd(this.start.x)) - this.totalWidth / 2;
 

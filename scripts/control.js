@@ -17,8 +17,8 @@ export class Control {
             Height: 10,
             Seed:10
         };
-        this.gui.add(this.obj, "Width",5,50,1); 
-        this.gui.add(this.obj, "Height",5,50,1); 
+        this.gui.add(this.obj, "Width",7,50,1); 
+        this.gui.add(this.obj, "Height",7,50,1); 
         this.gui.add(this.obj, "Seed"); 
         this.gui.add(this.obj, "Generate"); 
         this.Generate()
