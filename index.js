@@ -6,8 +6,8 @@ import {
     WebGLRenderer,
 } from "three";
 
-import { OrbitControls } from "./orbit.js";
-import { Control } from "./control.js";
+import { OrbitControls } from "./scripts/orbit.js";
+import { Control } from "./scripts/control.js";
 
 let scene = new Scene();
 
