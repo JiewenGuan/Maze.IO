@@ -2,6 +2,7 @@ import { Maze } from "./maze.js";
 import { GUI } from "./lilgui.js";
 import { Group } from "./three.js";
 import { Agent } from "./agent.js";
+import { PathFindProblem } from "./problem.js";
 export class Control {
     constructor(scene) {
         window.ctrl = this;
@@ -29,13 +30,25 @@ export class Control {
             Reset: function () {
                 window.alert("Reset");
             },
+            StartPositionX:0,
+            StartPositionY:0,
+            GoalPositionX:1,
+            GoalPositionY:1,
+            RandomStartAndGoal:true
         };
 
-        let setup = this.gui.addFolder("Setup");
-        setup.add(this.obj, "Width", 7, 50, 1);
-        setup.add(this.obj, "Height", 7, 50, 1);
-        setup.add(this.obj, "Seed");
-        setup.add(this.obj, "Generate");
+        let config = this.gui.addFolder("Config");
+        config.add(this.obj, "Width", 7, 50, 1);
+        config.add(this.obj, "Height", 7, 50, 1);
+        config.add(this.obj, "Seed");
+        config.add(this.obj, "RandomStartAndGoal");
+        config.add(this.obj, "StartPositionX",0,50,1);
+        config.add(this.obj, "StartPositionY",0,50,1);
+        config.add(this.obj, "GoalPositionX",0,50,1);
+        config.add(this.obj, "GoalPositionY",0,50,1);
+        config.add(this.obj, "Generate");
+
+
         let statics = this.gui.addFolder("Statics");
         statics.add(this.obj, "Steps").listen().disable();
 
@@ -55,11 +68,12 @@ export class Control {
             this.agent = undefined;
         }
         
+        
         this.maze = new Maze(this.obj.Width, this.obj.Height, this.obj.Seed);
         this.maze.init();
-        this.maze.generate();
+        this.maze.generate(this.obj.RandomStartAndGoal,this.obj);
         this.group.children = this.maze.toGroup().children;
         this.agent = new Agent(this.maze,this.scene);
-
+        this.problem = new PathFindProblem(this.maze);
     }
 }

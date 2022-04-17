@@ -73,7 +73,7 @@ export class Maze {
         let root2 = this.find(p2);
         this.fa[root1] = root2;
     }
-    generate() {
+    generate(randomSG = false,obj = null) {
         let cue = [];
         for (let i = 1; i < this.height * 2; i += 2) {
             for (let j = 2; j < this.width * 2; j += 2) {
@@ -94,12 +94,22 @@ export class Maze {
                 this.map[e[0]][e[1]] = 0;
             }
         }
-        while (this.manhattanDistance() < Math.floor((this.width + this.height)*0.7)) {
-            this.start.x = this.random.getint(0, this.width - 1);
-            this.start.y = this.random.getint(0, this.height - 1);
-            this.goal.x = this.random.getint(0, this.width - 1);
-            this.goal.y = this.random.getint(0, this.height - 1);
-        }
+        if (randomSG) {
+            while (
+                this.manhattanDistance() <
+                Math.floor((this.width + this.height) * 0.7)
+            ) {
+                this.start.x = this.random.getint(0, this.width - 1);
+                this.start.y = this.random.getint(0, this.height - 1);
+                this.goal.x = this.random.getint(0, this.width - 1);
+                this.goal.y = this.random.getint(0, this.height - 1);
+            }
+        }else{
+            this.start.x = obj.StartPositionX;
+            this.start.y = obj.StartPositionY;
+            this.goal.x = obj.GoalPositionX;
+            this.goal.y = obj.GoalPositionY;
+        } 
     }
     manhattanDistance() {
         let ret = this.start.manhattanDistanceTo(this.goal);
@@ -116,8 +126,6 @@ export class Maze {
         }
     }
 
-    
-
     toGroup() {
         let group = new Group();
         for (let i = 0; i < this.map.length; i++) {
@@ -126,8 +134,17 @@ export class Maze {
                 let cubeX = this.wallthickness;
                 let cubeY = this.wallthickness;
                 let cubeZ = this.cellHeight;
-                let pos = new Vector3().copy(this.timeDist(new Vector2(j, i)).sub(new Vector2(this.totalWidth/2,this.totalHeight/2))).setZ(0);
-                
+                let pos = new Vector3()
+                    .copy(
+                        this.timeDist(new Vector2(j, i)).sub(
+                            new Vector2(
+                                this.totalWidth / 2,
+                                this.totalHeight / 2
+                            )
+                        )
+                    )
+                    .setZ(0);
+
                 let color = 0;
 
                 if (this.map[i][j] == 0) {
@@ -154,8 +171,7 @@ export class Maze {
                 group.add(mesh);
             }
         }
-        
-        
+
         let material = new MeshPhongMaterial({ color: 0x00ff00 });
         let geometry = new SphereGeometry(0.5);
         let startmesh = new Mesh(geometry, material);
@@ -163,7 +179,6 @@ export class Maze {
         startmesh.position.copy(this.translateV3(this.start));
         group.add(startmesh);
 
-        
         let material2 = new MeshPhongMaterial({ color: 0xff0000 });
         let geometry2 = new SphereGeometry(0.5);
         let goalmesh = new Mesh(geometry2, material2);
@@ -172,26 +187,47 @@ export class Maze {
         group.add(goalmesh);
         return group;
     }
-    timeDist(input){
+    timeDist(input) {
         return input.multiplyScalar((this.cellWidth + this.wallthickness) / 2);
     }
-    timeCoord(input){
+    timeCoord(input) {
         return input.clone().multiplyScalar(2).addScalar(1);
     }
-    
-    translateV2(input){
-        return this.timeDist(this.timeCoord(input)).sub(new Vector2(this.totalWidth/2,this.totalHeight/2));
+
+    translateV2(input) {
+        return this.timeDist(this.timeCoord(input)).sub(
+            new Vector2(this.totalWidth / 2, this.totalHeight / 2)
+        );
     }
-    translateV3(input,height = 0){
+    translateV3(input, height = 0) {
         let ret = this.translateV2(input);
         return new Vector3(ret.x, ret.y, height);
     }
-    isRoad(position,newpos){
-        let buffer = this.timeCoord(position).add(this.timeCoord(newpos)).divideScalar(2);
-        if(this.getCell(buffer) == 0){return true}
-        return false
+    isRoad(position, newpos) {
+        let buffer = this.timeCoord(position)
+            .add(this.timeCoord(newpos))
+            .divideScalar(2);
+        if (this.getCell(buffer) == 0) {
+            return true;
+        }
+        return false;
     }
-    getCell(input){
+    getCell(input) {
         return this.map[input.y][input.x];
+    }
+    getNeighbors(input) {
+        let target = [
+            input.clone().add(new Vector2(0, 1)),
+            input.clone().add(new Vector2(1, 0)),
+            input.clone().add(new Vector2(0, -1)),
+            input.clone().add(new Vector2(-1, 0)),
+        ];
+        let ret = [];
+        for (let i = 0; i < target.length; i++) {
+            if (this.isRoad(input, target[i])) {
+                ret.push(target[i]);
+            }
+        }
+        return ret;
     }
 }

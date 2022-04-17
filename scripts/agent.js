@@ -28,16 +28,16 @@ export class Agent {
     move(option) {
         let newpos = this.position.clone();
         switch (option) {
-            case "up":
+            case 0:
                 newpos.y++;
                 break;
-            case "down":
+            case 2:
                 newpos.y--;
                 break;
-            case "left":
+            case 3:
                 newpos.x--;
                 break;
-            case "right":
+            case 1:
                 newpos.x++;
                 break;
         }
