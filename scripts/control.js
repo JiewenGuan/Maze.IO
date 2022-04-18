@@ -34,7 +34,7 @@ export class Control {
             StartPositionY:0,
             GoalPositionX:1,
             GoalPositionY:1,
-            RandomStartAndGoal:true
+            RandomStartAndGoal:false,
         };
 
         let config = this.gui.addFolder("Config");
@@ -75,5 +75,6 @@ export class Control {
         this.group.children = this.maze.toGroup().children;
         this.agent = new Agent(this.maze,this.scene);
         this.problem = new PathFindProblem(this.maze);
+        this.group.add(this.problem.toLines());
     }
 }
