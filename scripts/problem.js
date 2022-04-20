@@ -21,7 +21,9 @@ export class PathFindProblem extends Problem {
     }
     toLines() {
         let group = new Group();
-        let vectorCues = this.unpackArr(this.pathRoot.toLines(), (vector) => {return this.maze.translateV3(vector,0.5);});
+        let vectorCues = this.unpackArr(this.pathRoot.toLines(), (vector) => {
+            return this.maze.translateV3(vector, 0.5);
+        });
         for (let cue of vectorCues) {
             let geometry = new BufferGeometry().setFromPoints(cue);
             let material = new LineBasicMaterial({ color: 0xff0000 });
@@ -30,18 +32,19 @@ export class PathFindProblem extends Problem {
         }
         return group;
     }
-    unpackArr(arr, postprocess = null) {
+    unpackArr(
+        arr,
+        postprocess = (vector) => {
+            return vector;
+        }
+    ) {
         let buffer = [];
         let ret = [];
         for (let i = 0; i < arr.length; i++) {
             if (Array.isArray(arr[i])) {
                 ret.push(...this.unpackArr(arr[i], postprocess));
             } else {
-                if (postprocess) {
-                    buffer.push(postprocess(arr[i]));
-                } else {
-                    buffer.push(arr[i]);
-                }
+                buffer.push(postprocess(arr[i]));
             }
         }
         if (buffer.length > 0) {

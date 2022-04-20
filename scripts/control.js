@@ -41,11 +41,12 @@ export class Control {
         config.add(this.obj, "Width", 7, 50, 1);
         config.add(this.obj, "Height", 7, 50, 1);
         config.add(this.obj, "Seed");
-        config.add(this.obj, "RandomStartAndGoal");
-        config.add(this.obj, "StartPositionX",0,50,1);
-        config.add(this.obj, "StartPositionY",0,50,1);
-        config.add(this.obj, "GoalPositionX",0,50,1);
-        config.add(this.obj, "GoalPositionY",0,50,1);
+        let startAndGoal = config.addFolder("Start&Goal");
+        startAndGoal.add(this.obj, "RandomStartAndGoal");
+        startAndGoal.add(this.obj, "StartPositionX",0,50,1);
+        startAndGoal.add(this.obj, "StartPositionY",0,50,1);
+        startAndGoal.add(this.obj, "GoalPositionX",0,50,1);
+        startAndGoal.add(this.obj, "GoalPositionY",0,50,1);
         config.add(this.obj, "Generate");
 
 
@@ -75,6 +76,6 @@ export class Control {
         this.group.children = this.maze.toGroup().children;
         this.agent = new Agent(this.maze,this.scene);
         this.problem = new PathFindProblem(this.maze);
-        this.group.add(this.problem.toLines());
+        //this.group.add(this.problem.toLines());
     }
 }
