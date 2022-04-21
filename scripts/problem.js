@@ -1,24 +1,29 @@
 import { Line, LineBasicMaterial, BufferGeometry, Group } from "./three.js";
-class Problem {
-    constructor() {}
-    GetStartState() {}
-    IsGoalState(state) {}
-    GetSuccessors(state) {}
-    GetHeuristic(currentState) {}
-}
-class State {
-    constructor() {
-        //this.actions = actions;
-    }
-}
 
-export class PathFindProblem extends Problem {
+export class PathFindProblem {
     constructor(maze) {
-        super();
         this.maze = maze;
         this.pathRoot = new MazeState(maze.start, maze);
         window.problem = this;
     }
+
+    getStartState() {
+        return this.pathRoot;
+    }
+
+    isGoalState(state){
+        return maze.goal.equals(state.position);
+    }
+
+    getActions(state) {
+        return state.actions}
+
+    getDistanceToGoal(state) {
+        return state.position.distanceTo(this.maze.goal);
+    }
+
+    
+
     toLines() {
         let group = new Group();
         let vectorCues = this.unpackArr(this.pathRoot.toLines(), (vector) => {
@@ -53,31 +58,33 @@ export class PathFindProblem extends Problem {
         return ret;
     }
 }
-class MazeState extends State {
+class MazeState {
     constructor(position, maze, root = null) {
-        super();
         this.root = root;
+        this.rootAction = null;
         this.position = position;
         let targets = maze.getNeighbors(position);
-        this.actions = [];
-        for (let target of targets) {
+        this.actions = {};
+        for (let [key, target] of Object.entries(targets)) {
             if (this.root) {
                 if (this.root.position.equals(target)) {
+                    this.rootAction = key;
                     continue;
                 }
             }
-            this.actions.push(new this.constructor(target, maze, this));
+            this.actions[key] = new this.constructor(target, maze, this);
         }
     }
     toLines(ret = []) {
+        let acts = Object.values(this.actions);
         ret.push(this.position.clone());
-        if (this.actions.length > 0) {
-            this.actions[0].toLines(ret);
+        if (acts.length > 0) {
+            acts[0].toLines(ret);
         }
-        if (this.actions.length > 1) {
+        if (acts.length > 1) {
             let buffer = [];
-            for (let i = 1; i < this.actions.length; i++) {
-                buffer.push(this.actions[i].toLines([this.position.clone()]));
+            for (let i = 1; i < acts.length; i++) {
+                buffer.push(acts[i].toLines([this.position.clone()]));
             }
             ret.push(buffer);
         }

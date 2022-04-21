@@ -222,10 +222,10 @@ export class Maze {
             input.clone().add(new Vector2(0, -1)),
             input.clone().add(new Vector2(-1, 0)),
         ];
-        let ret = [];
+        let ret = {};
         for (let i = 0; i < target.length; i++) {
             if (this.isRoad(input, target[i])) {
-                ret.push(target[i]);
+                ret[i] = target[i];
             }
         }
         return ret;
