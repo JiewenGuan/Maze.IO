@@ -31,12 +31,6 @@ export class Control {
             Reset: function () {
                 window.alert("Reset");
             },
-            ShowTree: function () {
-                ctrl.ShowTree();
-            },
-            HideTree: function () {
-                ctrl.HideTree();
-            },
             StartPositionX: 0,
             StartPositionY: 0,
             GoalPositionX: 1,
@@ -55,9 +49,7 @@ export class Control {
         startAndGoal.add(this.obj, "GoalPositionX", 0, 50, 1);
         startAndGoal.add(this.obj, "GoalPositionY", 0, 50, 1);
         config.add(this.obj, "Generate");
-        config.add(this.obj, "ShowTree");
-        config.add(this.obj, "HideTree");
-
+        
         let statics = this.gui.addFolder("Statics");
         statics.add(this.obj, "Steps").listen().disable();
 
@@ -82,19 +74,7 @@ export class Control {
                 break;
         }
     }
-    HideTree() {
-        for (let child of this.group.children) {
-            if (child.name == "tree") {
-                this.group.remove(child);
-            }
-        }
-    }
-    ShowTree() {
-        this.HideTree();
-        let tree = this.problem.toLines();
-        tree.name = "tree";
-        this.group.add(tree);
-    }
+    
     Generate() {
         this.group.children = [];
         if (this.agent) {

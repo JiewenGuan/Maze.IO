@@ -8,11 +8,36 @@ export class Agent {
         scene.add(this.group);
         scene.add(this.trace);
         this.update();
+        window.agent = this;
+
+        document.addEventListener("keydown", function (e) {
+            switch (e.key) {
+                case "w":
+                case "ArrowUp":
+                    agent.move(0);
+                    break;
+                case "s":
+                case "ArrowDown":
+                    agent.move(2);
+                    break;
+                case "a":
+                case "ArrowLeft":
+                    agent.move(3);
+                    break;
+                case "d":
+                case "ArrowRight":
+                    agent.move(1);
+                    break;
+                default:
+                    console.log(e.key);
+                    break;
+            }
+        });
     }
     update() {
         let buffer = this.group.children[0];
         if (buffer) {
-            buffer.position.z=0
+            buffer.position.z = 0;
             buffer.rotateX(Math.PI);
             this.trace.add(buffer);
         }
@@ -23,7 +48,7 @@ export class Agent {
         cone.rotateX(-Math.PI / 2);
         cone.position.copy(this.maze.translateV3(this.position, 1));
         this.group.add(cone);
-        ctrl.obj.Steps = this.trace.children.length
+        ctrl.obj.Steps = this.trace.children.length;
     }
     move(option) {
         let newpos = this.position.clone();
@@ -42,6 +67,11 @@ export class Agent {
                 break;
         }
         if (this.maze.isRoad(this.position, newpos)) {
+            this.moveTo(newpos);
+        }
+    }
+    moveTo(newpos) {
+        if (!this.position.equals(newpos)) {
             this.position = newpos;
             this.update();
         }

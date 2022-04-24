@@ -2,6 +2,7 @@ class Solver{
     constructor(problem,agent){
         this.problem = problem;
         this.agent = agent;
+        this.isrunning = false;
     }
 }
 
@@ -17,10 +18,16 @@ export class DepthFirst extends Solver{
 export class BredthFirst extends Solver{
     constructor(problem,agent){
         super(problem,agent);
+        this.border = [];
+        this.pathTree = {};
         this.solve();
     }
     solve(){
-        alert("BredthFirst")
+        
+    }
+    insert(state){
+        let i = 0;
+        
     }
 }
 export class Astar extends Solver{
