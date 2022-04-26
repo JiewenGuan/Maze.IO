@@ -1,4 +1,14 @@
-import { Group, ConeGeometry, Mesh, MeshPhongMaterial } from "./three.js";
+import {
+    Group,
+    ConeGeometry,
+    Mesh,
+    MeshPhongMaterial,
+    Line,
+    BufferGeometry,
+    LineBasicMaterial
+} from "./three.js";
+import { TextGeometry } from "./textGeometry.js";
+
 export class Agent {
     constructor(maze, scene) {
         this.position = maze.start;
@@ -37,9 +47,23 @@ export class Agent {
     update() {
         let buffer = this.group.children[0];
         if (buffer) {
-            buffer.position.z = 0;
-            buffer.rotateX(Math.PI);
-            this.trace.add(buffer);
+            let pos = buffer.position.clone();
+            let stepCount = ctrl.obj.Steps.toString();
+            var txtGeo = new TextGeometry(stepCount, {
+                font: font,
+                size: 0.3,
+                height: 0.1,
+                curveSegments: 12,
+                bevelEnabled: true,
+                bevelThickness: 0.01,
+                bevelSize: 0.01,
+                bevelSegments: 3,
+            });
+            let material = new MeshPhongMaterial({ color: 0x000000 });
+            let text = new Mesh(txtGeo, material);
+            text.position.copy(pos);
+            this.trace.add(text);
+            ctrl.obj.Steps += 1;
         }
         this.group.remove(buffer);
         let geometry = new ConeGeometry(0.4, 2, 32, 1, false);
@@ -48,7 +72,6 @@ export class Agent {
         cone.rotateX(-Math.PI / 2);
         cone.position.copy(this.maze.translateV3(this.position, 1));
         this.group.add(cone);
-        ctrl.obj.Steps = this.trace.children.length;
     }
     move(option) {
         let newpos = this.position.clone();
@@ -75,5 +98,22 @@ export class Agent {
             this.position = newpos;
             this.update();
         }
+    }
+    clearTrace() {
+        this.trace.children = [];
+        ctrl.obj.Steps = 0;
+    }
+    showPath(goal,height = 2) {
+        let current = goal;
+        let points = [];
+        while (current.root) {
+            points.push(this.maze.translateV3(current.toVector(), height));
+            current = current.root;
+        }
+        points.push(this.maze.translateV3(current.toVector(), height));
+        let geometry = new BufferGeometry().setFromPoints(points);
+        let material = new LineBasicMaterial({ color: 0xff0000 });
+        let line = new Line(geometry, material);
+        this.trace.add(line);
     }
 }

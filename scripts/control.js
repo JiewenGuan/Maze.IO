@@ -25,11 +25,8 @@ export class Control {
             Start: function () {
                 ctrl.Start();
             },
-            Palse: function () {
-                window.alert("Palse");
-            },
             Reset: function () {
-                window.alert("Reset");
+                ctrl.Generate()
             },
             StartPositionX: 0,
             StartPositionY: 0,
@@ -44,10 +41,10 @@ export class Control {
         config.add(this.obj, "Seed");
         let startAndGoal = config.addFolder("Start&Goal");
         startAndGoal.add(this.obj, "RandomStartAndGoal");
-        startAndGoal.add(this.obj, "StartPositionX", 0, 50, 1);
-        startAndGoal.add(this.obj, "StartPositionY", 0, 50, 1);
-        startAndGoal.add(this.obj, "GoalPositionX", 0, 50, 1);
-        startAndGoal.add(this.obj, "GoalPositionY", 0, 50, 1);
+        startAndGoal.add(this.obj, "StartPositionX", 0, 50, 1).listen();
+        startAndGoal.add(this.obj, "StartPositionY", 0, 50, 1).listen();
+        startAndGoal.add(this.obj, "GoalPositionX", 0, 50, 1).listen();
+        startAndGoal.add(this.obj, "GoalPositionY", 0, 50, 1).listen();
         config.add(this.obj, "Generate");
         
         let statics = this.gui.addFolder("Statics");
@@ -56,12 +53,12 @@ export class Control {
         let agent = this.gui.addFolder("Agent");
         agent.add(this.obj, "Algorithm", ["BFS", "DFS", "Astar"]);
         agent.add(this.obj, "Start");
-        agent.add(this.obj, "Palse");
         agent.add(this.obj, "Reset");
 
         this.Generate();
     }
     Start() {
+        this.agent.clearTrace()
         switch (this.obj.Algorithm) {
             case "BFS":
                 this.solver = new BredthFirst(this.problem, this.agent);
@@ -79,12 +76,17 @@ export class Control {
         this.group.children = [];
         if (this.agent) {
             this.agent.group.children = [];
+            this.agent.clearTrace();
             this.agent = undefined;
         }
 
         this.maze = new Maze(this.obj.Width, this.obj.Height, this.obj.Seed);
         this.maze.init();
         this.maze.generate(this.obj.RandomStartAndGoal, this.obj);
+        this.obj.StartPositionX = this.maze.start.x;
+        this.obj.StartPositionY = this.maze.start.y;
+        this.obj.GoalPositionX = this.maze.goal.x;
+        this.obj.GoalPositionY = this.maze.goal.y;
         let mazegrp = this.maze.toGroup();
         mazegrp.name = "maze";
         this.group.add(mazegrp);

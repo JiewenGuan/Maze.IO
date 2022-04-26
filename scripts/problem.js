@@ -18,9 +18,11 @@ export class PathFindProblem {
 
     getActions(state) {
         let ret = {};
-
-        for(let [key,action] of Object.entries(maze.getNeighbors(state))) {
-            ret[key]=new MazeState(action)
+        for (let [key, action] of Object.entries(maze.getNeighbors(state))) {
+            // if (action.equals(state.root)) {
+            //     continue;
+            // }
+            ret[key] = new MazeState(action, state);
         }
         return ret;
     }
@@ -30,16 +32,29 @@ export class PathFindProblem {
     }
 }
 class MazeState extends Vector2 {
-    constructor(position) {
+    constructor(position, root = null) {
         super();
+        this.root = root;
         this.copy(position);
-        this.value = Number.MAX_VALUE;
+        this.value = 0;
     }
-    setValue(input) {
-        if(input<this.value) {
-            this.value = input;
-            return true;
+    clone() {
+        return new MazeState(
+            new Vector2(this.x, this.y),
+            this.root,
+            this.value
+        );
+    }
+    equals(other) {
+        if (other) {
+            return this.x == other.x && this.y == other.y;
         }
         return false;
+    }
+    toString() {
+        return `${this.x}, ${this.y}`;
+    }
+    toVector(){
+        return new Vector2(this.x, this.y);
     }
 }

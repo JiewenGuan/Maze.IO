@@ -4,7 +4,12 @@ import {
     PointLight,
     Scene,
     WebGLRenderer,
+    MeshPhongMaterial,
+    Mesh,
 } from "./scripts/three.js";
+
+import { FontLoader } from "./scripts/fontLoader.js";
+import { TextGeometry } from "./scripts/textGeometry.js";
 
 import { OrbitControls } from "./scripts/orbit.js";
 import { Control } from "./scripts/control.js";
@@ -61,6 +66,14 @@ window.addEventListener(
         renderer.setSize(window.innerWidth, window.innerHeight);
     },
     false
+);
+
+var textLoad = new FontLoader().load(
+    "font.json",
+    function (font) {
+        window.font = font;
+        
+    }
 );
 
 render();
