@@ -19,7 +19,7 @@ export class Control {
             },
             Width: 10,
             Height: 10,
-            Seed: 10,
+            Seed: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
             Steps: 0,
             Algorithm: "BFS",
             Start: function () {
@@ -32,7 +32,7 @@ export class Control {
             StartPositionY: 0,
             GoalPositionX: 1,
             GoalPositionY: 1,
-            RandomStartAndGoal: false,
+            RandomStartAndGoal: true,
         };
 
         let config = this.gui.addFolder("Config");
