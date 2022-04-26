@@ -53,11 +53,8 @@ export class Agent {
                 font: font,
                 size: 0.3,
                 height: 0.1,
-                curveSegments: 12,
-                bevelEnabled: true,
-                bevelThickness: 0.01,
-                bevelSize: 0.01,
-                bevelSegments: 3,
+                curveSegments: 1,
+                bevelEnabled: false
             });
             let material = new MeshPhongMaterial({ color: 0x000000 });
             let text = new Mesh(txtGeo, material);
