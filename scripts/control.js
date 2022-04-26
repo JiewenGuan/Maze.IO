@@ -33,12 +33,18 @@ export class Control {
             GoalPositionX: 1,
             GoalPositionY: 1,
             RandomStartAndGoal: true,
+            stepHeight: 0.5,
+            pathHeight:0.5,
+            delayMs: 100,
         };
 
         let config = this.gui.addFolder("Config");
         config.add(this.obj, "Width", 7, 50, 1);
         config.add(this.obj, "Height", 7, 50, 1);
         config.add(this.obj, "Seed");
+        config.add(this.obj, "stepHeight");
+        config.add(this.obj, "pathHeight");
+        config.add(this.obj, "delayMs", 1,1000,10);
         let startAndGoal = config.addFolder("Start&Goal");
         startAndGoal.add(this.obj, "RandomStartAndGoal");
         startAndGoal.add(this.obj, "StartPositionX", 0, 50, 1).listen();

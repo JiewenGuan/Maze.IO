@@ -15,4 +15,6 @@ export class Random {
         return Math.floor(this.getfloat(min, max));
     }
 }
-
+export function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms || DEF_DELAY));
+}

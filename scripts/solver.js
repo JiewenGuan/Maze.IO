@@ -1,3 +1,6 @@
+import { sleep } from "./utils.js";
+
+
 class Solver {
     constructor(problem, agent) {
         this.problem = problem;
@@ -19,17 +22,18 @@ export class BredthFirst extends Solver {
     constructor(problem, agent) {
         super(problem, agent);
         this.border = [problem.getStartState()];
-        let goal = this.getGoal();
-        agent.showPath(goal);
+        this.getGoal();
         //console.log(goal);
     }
-    getGoal() {
+    async getGoal() {
         let visited = new Set();
         visited.add(this.problem.getStartState().toString());
         while (this.border.length > 0) {
             let state = this.border.shift();
             this.agent.moveTo(state.toVector())
+            await sleep(ctrl.obj.delayMs);
             if (this.problem.isGoalState(state)) {
+                this.agent.showPath(state);
                 return state;
             }
             for (let [key, action] of Object.entries(

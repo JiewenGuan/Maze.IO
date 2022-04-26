@@ -113,7 +113,6 @@ export class Maze {
     }
     manhattanDistance() {
         let ret = this.start.manhattanDistanceTo(this.goal);
-        console.log(ret);
         return ret;
     }
     print() {

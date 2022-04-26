@@ -5,10 +5,9 @@ import {
     MeshPhongMaterial,
     Line,
     BufferGeometry,
-    LineBasicMaterial
+    LineBasicMaterial,
 } from "./three.js";
 import { TextGeometry } from "./textGeometry.js";
-
 export class Agent {
     constructor(maze, scene) {
         this.position = maze.start;
@@ -54,11 +53,12 @@ export class Agent {
                 size: 0.3,
                 height: 0.1,
                 curveSegments: 1,
-                bevelEnabled: false
+                bevelEnabled: false,
             });
             let material = new MeshPhongMaterial({ color: 0x000000 });
             let text = new Mesh(txtGeo, material);
             text.position.copy(pos);
+            text.position.z = ctrl.obj.stepHeight;
             this.trace.add(text);
             ctrl.obj.Steps += 1;
         }
@@ -100,7 +100,8 @@ export class Agent {
         this.trace.children = [];
         ctrl.obj.Steps = 0;
     }
-    showPath(goal,height = 2) {
+    showPath(goal) {
+        let height = ctrl.obj.pathHeight;
         let current = goal;
         let points = [];
         while (current.root) {
