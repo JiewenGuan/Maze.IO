@@ -114,4 +114,13 @@ export class Agent {
         let line = new Line(geometry, material);
         this.trace.add(line);
     }
+    drawPath(state) {
+        if(state.root){
+        let pos = [this.maze.translateV3(state.toVector()),this.maze.translateV3(state.root.toVector())];
+        var txtGeo = new BufferGeometry().setFromPoints(pos);
+        let material = new LineBasicMaterial({ color: 0x0000ff });({ color: 0x000000 });
+        let text = new Line(txtGeo, material);
+        text.position.z = ctrl.obj.stepHeight;
+        this.trace.add(text);}
+    }
 }

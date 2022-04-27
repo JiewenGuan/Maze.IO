@@ -31,6 +31,7 @@ export class BredthFirst extends Solver {
         while (this.border.length > 0) {
             let state = this.border.shift();
             this.agent.moveTo(state.toVector())
+            this.agent.drawPath(state);
             await sleep(ctrl.obj.delayMs);
             if (this.problem.isGoalState(state)) {
                 this.agent.showPath(state);
