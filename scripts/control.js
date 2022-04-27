@@ -23,18 +23,21 @@ export class Control {
             Steps: 0,
             Algorithm: "BFS",
             Start: function () {
+                ctrl.Generate()
                 ctrl.Start();
             },
             Reset: function () {
-                ctrl.Generate()
+                ctrl.gui.children[2].children[2].disable();
+                ctrl.Generate();
             },
+            
             StartPositionX: 0,
             StartPositionY: 0,
             GoalPositionX: 1,
             GoalPositionY: 1,
             RandomStartAndGoal: true,
             stepHeight: 0.5,
-            pathHeight:0.5,
+            pathHeight: 0.5,
             delayMs: 100,
         };
 
@@ -44,7 +47,7 @@ export class Control {
         config.add(this.obj, "Seed");
         config.add(this.obj, "stepHeight");
         config.add(this.obj, "pathHeight");
-        config.add(this.obj, "delayMs", 1,1000,10);
+        config.add(this.obj, "delayMs", 1, 1000, 1).listen();
         let startAndGoal = config.addFolder("Start&Goal");
         startAndGoal.add(this.obj, "RandomStartAndGoal");
         startAndGoal.add(this.obj, "StartPositionX", 0, 50, 1).listen();
@@ -52,19 +55,19 @@ export class Control {
         startAndGoal.add(this.obj, "GoalPositionX", 0, 50, 1).listen();
         startAndGoal.add(this.obj, "GoalPositionY", 0, 50, 1).listen();
         config.add(this.obj, "Generate");
-        
+
         let statics = this.gui.addFolder("Statics");
         statics.add(this.obj, "Steps").listen().disable();
 
         let agent = this.gui.addFolder("Agent");
         agent.add(this.obj, "Algorithm", ["BFS", "DFS", "Astar"]);
         agent.add(this.obj, "Start");
-        agent.add(this.obj, "Reset");
+        agent.add(this.obj, "Reset").disable();
 
         this.Generate();
     }
     Start() {
-        this.agent.clearTrace()
+        this.gui.children[2].children[1].disable();
         switch (this.obj.Algorithm) {
             case "BFS":
                 this.solver = new BredthFirst(this.problem, this.agent);
@@ -77,7 +80,9 @@ export class Control {
                 break;
         }
     }
+
     
+
     Generate() {
         this.group.children = [];
         if (this.agent) {
@@ -98,6 +103,6 @@ export class Control {
         this.group.add(mazegrp);
         this.agent = new Agent(this.maze, this.scene);
         this.problem = new PathFindProblem(this.maze);
-        //this.group.add(this.problem.toLines());
+        ctrl.gui.children[2].children[1].enable();
     }
 }
