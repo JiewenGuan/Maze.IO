@@ -6,6 +6,7 @@ import {
     Line,
     BufferGeometry,
     LineBasicMaterial,
+    Vector3,
 } from "./three.js";
 import { TextGeometry } from "./textGeometry.js";
 export class Agent {
@@ -58,7 +59,7 @@ export class Agent {
             let material = new MeshPhongMaterial({ color: 0x000000 });
             let text = new Mesh(txtGeo, material);
             text.position.copy(pos);
-            text.position.z = ctrl.obj.stepHeight;
+            text.position.add(new Vector3(-0.2,-0.2,-1))
             this.trace.add(text);
             ctrl.obj.Steps += 1;
         }
