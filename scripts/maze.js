@@ -73,7 +73,7 @@ export class Maze {
         let root2 = this.find(p2);
         this.fa[root1] = root2;
     }
-    generate(randomSG = false,obj = null) {
+    generate(randomSG = false, obj = null) {
         let cue = [];
         for (let i = 1; i < this.height * 2; i += 2) {
             for (let j = 2; j < this.width * 2; j += 2) {
@@ -104,12 +104,28 @@ export class Maze {
                 this.goal.x = this.random.getint(0, this.width - 1);
                 this.goal.y = this.random.getint(0, this.height - 1);
             }
-        }else{
-            this.start.x = obj.StartPositionX;
-            this.start.y = obj.StartPositionY;
-            this.goal.x = obj.GoalPositionX;
-            this.goal.y = obj.GoalPositionY;
-        } 
+        } else {
+            if (obj.StartPositionX > obj.Width - 1) {
+                this.start.x = obj.Width - 1;
+            } else {
+                this.start.x = obj.StartPositionX;
+            }
+            if (obj.StartPositionY > obj.Height - 1) {
+                this.start.y = obj.Height - 1;
+            } else {
+                this.start.y = obj.StartPositionY;
+            }
+            if (obj.GoalPositionX > obj.Width - 1) {
+                this.goal.x = obj.Width - 1;
+            } else {
+                this.goal.x = obj.GoalPositionX;
+            }
+            if (obj.GoalPositionY > obj.Height - 1) {
+                this.goal.y = obj.Height - 1;
+            } else {
+                this.goal.y = obj.GoalPositionY;
+            }
+        }
     }
     manhattanDistance() {
         let ret = this.start.manhattanDistanceTo(this.goal);

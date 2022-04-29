@@ -50,10 +50,10 @@ export class Control {
         config.add(this.obj, "delayMs", 1, 1000, 1).listen();
         let startAndGoal = config.addFolder("Start&Goal");
         startAndGoal.add(this.obj, "RandomStartAndGoal");
-        startAndGoal.add(this.obj, "StartPositionX", 0, 50, 1).listen();
-        startAndGoal.add(this.obj, "StartPositionY", 0, 50, 1).listen();
-        startAndGoal.add(this.obj, "GoalPositionX", 0, 50, 1).listen();
-        startAndGoal.add(this.obj, "GoalPositionY", 0, 50, 1).listen();
+        startAndGoal.add(this.obj, "StartPositionX", 0, this.obj.Width-1, 1).listen();
+        startAndGoal.add(this.obj, "StartPositionY", 0, this.obj.Height-1, 1).listen();
+        startAndGoal.add(this.obj, "GoalPositionX", 0, this.obj.Width-1, 1).listen();
+        startAndGoal.add(this.obj, "GoalPositionY", 0, this.obj.Height-1, 1).listen();
         config.add(this.obj, "Generate");
 
         let statics = this.gui.addFolder("Statics");
@@ -84,6 +84,10 @@ export class Control {
     
 
     Generate() {
+        ctrl.gui.children[0].children[6].children[1].max(this.obj.Width-1)
+        ctrl.gui.children[0].children[6].children[2].max(this.obj.Height-1)
+        ctrl.gui.children[0].children[6].children[3].max(this.obj.Width-1)
+        ctrl.gui.children[0].children[6].children[4].max(this.obj.Height-1)
         this.group.children = [];
         if (this.agent) {
             this.agent.group.children = [];
