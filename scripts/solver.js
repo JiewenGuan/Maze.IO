@@ -1,21 +1,47 @@
 import { sleep } from "./utils.js";
 
-
 class Solver {
     constructor(problem, agent) {
         this.problem = problem;
         this.agent = agent;
-        this.isrunning = false;
     }
 }
 
 export class DepthFirst extends Solver {
     constructor(problem, agent) {
         super(problem, agent);
+        this.current = this.problem.getStartState();
+        this.visited = new Set();
+        this.visited.add(this.current.toString());
+
         this.solve();
     }
-    solve() {
-        alert("DepthFirst");
+    async solve() {
+        while (!this.problem.isGoalState(this.current)) {
+            let next = this.getnext(this.current);
+            if (next) {
+                this.current = next;
+                this.agent.moveTo(this.current.toVector());
+                this.agent.drawPath(this.current);
+                await sleep(ctrl.obj.delayMs);
+            } else {
+                break;
+            }
+        }
+        this.agent.showPath(this.current);
+        ctrl.gui.children[2].children[2].enable();
+        return this.current;
+    }
+    getnext(state) {
+        for (let [key, action] of Object.entries(
+            this.problem.getActions(state)
+        )) {
+            if (!this.visited.has(action.toString())) {
+                this.visited.add(action.toString());
+                return action;
+            }
+        }
+        return this.getnext(state.root);
     }
 }
 export class BredthFirst extends Solver {
@@ -30,7 +56,7 @@ export class BredthFirst extends Solver {
         visited.add(this.problem.getStartState().toString());
         while (this.border.length > 0) {
             let state = this.border.shift();
-            this.agent.moveTo(state.toVector())
+            this.agent.moveTo(state.toVector());
             this.agent.drawPath(state);
             await sleep(ctrl.obj.delayMs);
             if (this.problem.isGoalState(state)) {
@@ -47,9 +73,6 @@ export class BredthFirst extends Solver {
                 }
             }
         }
-    }
-    insert(state) {
-        let i = 0;
     }
 }
 export class Astar extends Solver {
