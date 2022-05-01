@@ -108,7 +108,7 @@ export class Astar extends Solver {
         }
     }
     insert(input){
-        input.value = input.steps()+this.problem.getDistanceToGoal(input);
+        input.value = (0.5*input.steps())+this.problem.getDistanceToGoal(input);
         this.que.enqueue(input);
     }
 }
