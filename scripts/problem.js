@@ -25,6 +25,11 @@ export class PathFindProblem {
     }
 
     getDistanceToGoal(state) {
+        return state.distanceTo(this.maze.goal);
+
+    }
+
+    getManhattanDistanceToGoal(state) {
         return state.manhattanDistanceTo(this.maze.goal);
     }
 }

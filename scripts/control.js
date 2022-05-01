@@ -23,14 +23,14 @@ export class Control {
             Steps: 0,
             Algorithm: "BFS",
             Start: function () {
-                ctrl.Generate()
+                ctrl.Generate();
                 ctrl.Start();
             },
             Reset: function () {
                 ctrl.gui.children[2].children[2].disable();
                 ctrl.Generate();
             },
-            
+
             StartPositionX: 0,
             StartPositionY: 0,
             GoalPositionX: 1,
@@ -50,17 +50,30 @@ export class Control {
         config.add(this.obj, "delayMs", 1, 1000, 1).listen();
         let startAndGoal = config.addFolder("Start&Goal");
         startAndGoal.add(this.obj, "RandomStartAndGoal");
-        startAndGoal.add(this.obj, "StartPositionX", 0, this.obj.Width-1, 1).listen();
-        startAndGoal.add(this.obj, "StartPositionY", 0, this.obj.Height-1, 1).listen();
-        startAndGoal.add(this.obj, "GoalPositionX", 0, this.obj.Width-1, 1).listen();
-        startAndGoal.add(this.obj, "GoalPositionY", 0, this.obj.Height-1, 1).listen();
+        startAndGoal
+            .add(this.obj, "StartPositionX", 0, this.obj.Width - 1, 1)
+            .listen();
+        startAndGoal
+            .add(this.obj, "StartPositionY", 0, this.obj.Height - 1, 1)
+            .listen();
+        startAndGoal
+            .add(this.obj, "GoalPositionX", 0, this.obj.Width - 1, 1)
+            .listen();
+        startAndGoal
+            .add(this.obj, "GoalPositionY", 0, this.obj.Height - 1, 1)
+            .listen();
         config.add(this.obj, "Generate");
 
         let statics = this.gui.addFolder("Statics");
         statics.add(this.obj, "Steps").listen().disable();
 
         let agent = this.gui.addFolder("Agent");
-        agent.add(this.obj, "Algorithm", ["BFS", "DFS", "Astar"]);
+        agent.add(this.obj, "Algorithm", [
+            "BFS",
+            "DFS",
+            "Astar(Manhattan)",
+            "Astar(Euclidean)",
+        ]);
         agent.add(this.obj, "Start");
         agent.add(this.obj, "Reset").disable();
 
@@ -75,19 +88,20 @@ export class Control {
             case "DFS":
                 this.solver = new DepthFirst(this.problem, this.agent);
                 break;
-            case "Astar":
+            case "Astar(Manhattan)":
+                this.solver = new Astar(this.problem, this.agent, true);
+                break;
+            case "Astar(Euclidean)":
                 this.solver = new Astar(this.problem, this.agent);
                 break;
         }
     }
 
-    
-
     Generate() {
-        ctrl.gui.children[0].children[6].children[1].max(this.obj.Width-1)
-        ctrl.gui.children[0].children[6].children[2].max(this.obj.Height-1)
-        ctrl.gui.children[0].children[6].children[3].max(this.obj.Width-1)
-        ctrl.gui.children[0].children[6].children[4].max(this.obj.Height-1)
+        ctrl.gui.children[0].children[6].children[1].max(this.obj.Width - 1);
+        ctrl.gui.children[0].children[6].children[2].max(this.obj.Height - 1);
+        ctrl.gui.children[0].children[6].children[3].max(this.obj.Width - 1);
+        ctrl.gui.children[0].children[6].children[4].max(this.obj.Height - 1);
         this.group.children = [];
         if (this.agent) {
             this.agent.group.children = [];

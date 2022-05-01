@@ -78,8 +78,9 @@ export class BredthFirst extends Solver {
     }
 }
 export class Astar extends Solver {
-    constructor(problem, agent) {
+    constructor(problem, agent, isManahattan = false) {
         super(problem, agent);
+        this.isManahattan = isManahattan;
         this.que = new PriorityQueue();
         this.insert(this.problem.getStartState());
         this.solve();
@@ -108,7 +109,16 @@ export class Astar extends Solver {
         }
     }
     insert(input){
-        input.value = input.cost+this.problem.getDistanceToGoal(input);
+        if(this.isManahattan){
+            input.value = input.cost+this.problem.getManhattanDistanceToGoal(input);
+        }else{
+            input.value = input.cost+this.problem.getDistanceToGoal(input);
+        }
+        // let debug = ""
+        // for(let i of this.que.items){
+        //     debug += i.value+" ";
+        // }
+        // console.log(debug);
         this.que.enqueue(input);
     }
 }
