@@ -34,6 +34,11 @@ class MazeState extends Vector2 {
         this.root = root;
         this.copy(position);
         this.value = 0;
+        if(root){
+        this.cost = root.cost+1;
+        }else{
+            this.cost = 1;
+        }
     }
     clone() {
         return new MazeState(
@@ -54,11 +59,5 @@ class MazeState extends Vector2 {
     toVector(){
         return new Vector2(this.x, this.y);
     }
-    steps(){
-        let ret = 1;
-        if(this.root){
-            ret += this.root.steps();
-        }
-        return ret;
-    }
+    
 }
