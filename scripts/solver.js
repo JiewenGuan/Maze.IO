@@ -31,6 +31,8 @@ export class DepthFirst extends Solver {
         }
         this.agent.showPath(this.current);
         ctrl.gui.children[2].children[2].enable();
+        ctrl.gui.children[0].children[7].enable();
+
         return this.current;
     }
     getnext(state) {
@@ -64,6 +66,7 @@ export class BredthFirst extends Solver {
             if (this.problem.isGoalState(state)) {
                 this.agent.showPath(state);
                 ctrl.gui.children[2].children[2].enable();
+                ctrl.gui.children[0].children[7].enable();
                 return state;
             }
             for (let [key, action] of Object.entries(
@@ -96,6 +99,7 @@ export class Astar extends Solver {
             if (this.problem.isGoalState(state)) {
                 this.agent.showPath(state);
                 ctrl.gui.children[2].children[2].enable();
+                ctrl.gui.children[0].children[7].enable();
                 return state;
             }
             for (let [key, action] of Object.entries(

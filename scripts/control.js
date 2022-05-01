@@ -15,6 +15,7 @@ export class Control {
         this.gui = new GUI();
         this.obj = {
             Generate: function () {
+                ctrl.gui.children[2].children[2].disable();
                 ctrl.Generate();
             },
             Width: 10,
@@ -24,6 +25,8 @@ export class Control {
             Algorithm: "BFS",
             Start: function () {
                 ctrl.Generate();
+                ctrl.gui.children[0].children[7].disable();
+
                 ctrl.Start();
             },
             Reset: function () {
