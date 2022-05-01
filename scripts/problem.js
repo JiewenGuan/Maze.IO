@@ -19,16 +19,13 @@ export class PathFindProblem {
     getActions(state) {
         let ret = {};
         for (let [key, action] of Object.entries(maze.getNeighbors(state))) {
-            // if (action.equals(state.root)) {
-            //     continue;
-            // }
             ret[key] = new MazeState(action, state);
         }
         return ret;
     }
 
     getDistanceToGoal(state) {
-        return state.distanceTo(this.maze.goal);
+        return state.manhattanDistanceTo(this.maze.goal);
     }
 }
 class MazeState extends Vector2 {
@@ -56,5 +53,12 @@ class MazeState extends Vector2 {
     }
     toVector(){
         return new Vector2(this.x, this.y);
+    }
+    steps(){
+        let ret = 1;
+        if(this.root){
+            ret += this.root.steps();
+        }
+        return ret;
     }
 }

@@ -1,4 +1,4 @@
-import { sleep } from "./utils.js";
+import { sleep, PriorityQueue } from "./utils.js";
 
 class Solver {
     constructor(problem, agent) {
@@ -9,6 +9,7 @@ class Solver {
 
 export class DepthFirst extends Solver {
     constructor(problem, agent) {
+        
         super(problem, agent);
         this.current = this.problem.getStartState();
         this.visited = new Set();
@@ -48,6 +49,7 @@ export class BredthFirst extends Solver {
     constructor(problem, agent) {
         super(problem, agent);
         this.border = [problem.getStartState()];
+
         this.solve();
         //console.log(goal);
     }
@@ -78,9 +80,35 @@ export class BredthFirst extends Solver {
 export class Astar extends Solver {
     constructor(problem, agent) {
         super(problem, agent);
+        this.que = new PriorityQueue();
+        this.insert(this.problem.getStartState());
         this.solve();
     }
-    solve() {
-        alert("Astar");
+    async solve() {
+        let visited = new Set();
+        visited.add(this.problem.getStartState().toString());
+        while (!this.que.isEmpty()) {
+            let state = this.que.dequeue();
+            this.agent.moveTo(state.toVector());
+            this.agent.drawPath(state);
+            await sleep(ctrl.obj.delayMs);
+            if (this.problem.isGoalState(state)) {
+                this.agent.showPath(state);
+                ctrl.gui.children[2].children[2].enable();
+                return state;
+            }
+            for (let [key, action] of Object.entries(
+                this.problem.getActions(state)
+            )) {
+                if (!visited.has(action.toString())) {
+                    this.insert(action);
+                    visited.add(action.toString());
+                }
+            }
+        }
+    }
+    insert(input){
+        input.value = input.steps()+this.problem.getDistanceToGoal(input);
+        this.que.enqueue(input);
     }
 }

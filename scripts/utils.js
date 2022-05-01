@@ -18,3 +18,22 @@ export class Random {
 export function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms || DEF_DELAY));
 }
+
+
+export class PriorityQueue{
+    constructor(sortBy){
+        this.items = [];
+        
+    }
+    enqueue(element){
+        this.items.push(element);
+        this.items.sort((a,b)=>a.value - b.value);
+    }
+    dequeue(){
+        return this.items.shift();
+    }
+    isEmpty(){
+        return this.items.length == 0;
+    }
+    
+}
