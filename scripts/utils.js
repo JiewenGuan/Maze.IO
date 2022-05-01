@@ -21,7 +21,7 @@ export function sleep(ms) {
 
 
 export class PriorityQueue{
-    constructor(sortBy){
+    constructor(){
         this.items = [];
         
     }
