@@ -23,28 +23,51 @@ export class Maze {
         this.totalHeight = (this.wallthickness + this.cellWidth) * this.height;
         this.start = new Vector2();
         this.goal = new Vector2();
-        this.init();
     }
-    init() {
+    init(walls) {
         this.random = new Random(this.seed);
         this.fa = {};
         this.map = [];
-        for (let i = 0; i < this.height * 2 + 1; i++) {
-            let buffer = [];
-            for (let j = 0; j < this.width * 2 + 1; j++) {
-                buffer.push(1);
-            }
-            this.map.push(buffer);
-        }
-        for (let i = 1; i < this.height * 2; i++) {
-            if (i % 2 == 1) {
-                for (let j = 1; j < this.width * 2; j++) {
-                    if (j % 2 == 1) {
-                        this.map[i][j] = 0;
-                        this.fa[[i, j]] = [i, j];
+
+        switch (walls) {
+            case "loop":
+            case "default":
+                for (let i = 0; i < this.height * 2 + 1; i++) {
+                    let buffer = [];
+                    for (let j = 0; j < this.width * 2 + 1; j++) {
+                        buffer.push(1);
+                    }
+                    this.map.push(buffer);
+                }
+                for (let i = 1; i < this.height * 2; i++) {
+                    if (i % 2 == 1) {
+                        for (let j = 1; j < this.width * 2; j++) {
+                            if (j % 2 == 1) {
+                                this.map[i][j] = 0;
+                                this.fa[[i, j]] = [i, j];
+                            }
+                        }
                     }
                 }
-            }
+                break;
+            case "noWall":
+                for (let i = 0; i < this.height * 2 + 1; i++) {
+                    let buffer = [];
+                    for (let j = 0; j < this.width * 2 + 1; j++) {
+                        if (
+                            i == 0 ||
+                            j == 0 ||
+                            i == this.height * 2 ||
+                            j == this.width * 2
+                        ) {
+                            buffer.push(1);
+                        } else {
+                            buffer.push(0);
+                        }
+                    }
+                    this.map.push(buffer);
+                }
+                break;
         }
     }
     arround(e) {
@@ -73,7 +96,7 @@ export class Maze {
         let root2 = this.find(p2);
         this.fa[root1] = root2;
     }
-    generate(randomSG = false, obj = null) {
+    generate(randomSG = false, obj = null, walls = null,loopFactor = 10) {
         let cue = [];
         for (let i = 1; i < this.height * 2; i += 2) {
             for (let j = 2; j < this.width * 2; j += 2) {
@@ -124,6 +147,22 @@ export class Maze {
                 this.goal.y = obj.Height - 1;
             } else {
                 this.goal.y = obj.GoalPositionY;
+            }
+        }
+        if (walls === "loop") {
+            for (let i = 1; i < this.height * 2; i += 2) {
+                for (let j = 2; j < this.width * 2; j += 2) {
+                    if (!this.random.getint(0, loopFactor)) {
+                        this.map[i][j] = 0;
+                    }
+                }
+            }
+            for (let i = 2; i < this.height * 2; i += 2) {
+                for (let j = 1; j < this.width * 2; j += 2) {
+                    if (!this.random.getint(0, loopFactor)) {
+                        this.map[i][j] = 0;
+                    }
+                }
             }
         }
     }

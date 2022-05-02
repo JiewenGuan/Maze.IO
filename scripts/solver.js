@@ -30,8 +30,8 @@ export class DepthFirst extends Solver {
             }
         }
         this.agent.showPath(this.current);
-        ctrl.gui.children[2].children[2].enable();
-        ctrl.gui.children[0].children[7].enable();
+        ctrl.resetButton.enable();
+        ctrl.generateButton.enable();
 
         return this.current;
     }
@@ -65,8 +65,8 @@ export class BredthFirst extends Solver {
             await sleep(ctrl.obj.delayMs);
             if (this.problem.isGoalState(state)) {
                 this.agent.showPath(state);
-                ctrl.gui.children[2].children[2].enable();
-                ctrl.gui.children[0].children[7].enable();
+                ctrl.resetButton.enable();
+                ctrl.generateButton.enable();
                 return state;
             }
             for (let [key, action] of Object.entries(
@@ -98,8 +98,8 @@ export class Astar extends Solver {
             await sleep(ctrl.obj.delayMs);
             if (this.problem.isGoalState(state)) {
                 this.agent.showPath(state);
-                ctrl.gui.children[2].children[2].enable();
-                ctrl.gui.children[0].children[7].enable();
+                ctrl.resetButton.enable();
+                ctrl.generateButton.enable();
                 return state;
             }
             for (let [key, action] of Object.entries(
