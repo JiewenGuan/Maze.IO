@@ -50,8 +50,6 @@ export class Control {
         config.add(this.obj, "Width", 7, 50, 1);
         config.add(this.obj, "Height", 7, 50, 1);
         config.add(this.obj, "Seed");
-        config.add(this.obj, "stepHeight");
-        config.add(this.obj, "pathHeight");
         config.add(this.obj, "delayMs", 1, 1000, 1).listen();
         config.add(this.obj, "Walls", ["default","loop","noWall"]);
         config.add(this.obj, "LoopFactor", 1, 10, 1);
