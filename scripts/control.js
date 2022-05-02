@@ -43,7 +43,7 @@ export class Control {
             RandomStartAndGoal: true,
             stepHeight: 0.5,
             pathHeight: 0.5,
-            delayMs: 100,
+            delayMs: 10,
         };
 
         let config = this.gui.addFolder("Config");
