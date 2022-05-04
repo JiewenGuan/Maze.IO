@@ -3,13 +3,10 @@ import {
     PerspectiveCamera,
     PointLight,
     Scene,
-    WebGLRenderer,
-    MeshPhongMaterial,
-    Mesh,
+    WebGLRenderer
 } from "./scripts/three.js";
 
 import { FontLoader } from "./scripts/fontLoader.js";
-import { TextGeometry } from "./scripts/textGeometry.js";
 
 import { OrbitControls } from "./scripts/orbit.js";
 import { Control } from "./scripts/control.js";

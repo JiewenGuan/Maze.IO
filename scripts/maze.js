@@ -96,7 +96,7 @@ export class Maze {
         let root2 = this.find(p2);
         this.fa[root1] = root2;
     }
-    generate(randomSG = false, obj = null, walls = null,loopFactor = 10) {
+    generate(randomSG = false, obj = null, walls = null,loopFactor = 10,extraStarts = 0,extraGoals = 0) {
         let cue = [];
         for (let i = 1; i < this.height * 2; i += 2) {
             for (let j = 2; j < this.width * 2; j += 2) {
