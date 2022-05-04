@@ -44,8 +44,7 @@ export class Control {
             stepHeight: 0.5,
             pathHeight: 0.5,
             delayMs: 10,
-            ExtraGoals: 0,
-            ExtraStarts: 0,
+            
         };
 
         let config = this.gui.addFolder("Config");
@@ -70,8 +69,6 @@ export class Control {
         this.startAndGoal
             .add(this.obj, "GoalPositionY", 0, this.obj.Height - 1, 1)
             .listen();
-        this.startAndGoal.add(this.obj, "ExtraStarts", 0, 5, 1);
-        this.startAndGoal.add(this.obj, "ExtraGoals", 0, 5, 1);
         this.generateButton = config.add(this.obj, "Generate");
 
         let statics = this.gui.addFolder("Statics");
