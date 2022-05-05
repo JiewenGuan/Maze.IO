@@ -1,5 +1,5 @@
-import { Game } from "./scripts/game.js";
+import { Base } from "./scripts/base.js";
 
-let game = new Game();
+let base = new Base();
 
-game.render();
+base.render();
