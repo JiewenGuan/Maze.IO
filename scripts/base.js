@@ -12,7 +12,7 @@ import {
 import { OrbitControls } from "./orbit.js";
 import { FontLoader } from "./fontLoader.js";
 import { MyController } from "./controller.js";
-import { MazeGame,RubicsCubeGame } from "./games.js";
+import { MazeGame, RubicsCubeGame } from "./games.js";
 
 export class MyCam extends PerspectiveCamera {
     constructor(zdistance = 30) {
@@ -45,16 +45,14 @@ export class MyScene extends Scene {
         lights[2].position.set(-100, -100, -200);
 
         this.utils = new Group();
-        this.utils.add(lights[0],lights[1],lights[2]);
+        this.utils.add(lights[0], lights[1], lights[2]);
         this.add(this.utils);
     }
-    reset(){
+    reset() {
         this.clear();
         this.add(this.utils);
     }
 }
-
-
 
 export class Base {
     constructor() {
@@ -63,29 +61,34 @@ export class Base {
         this.renderer = new MyRenderer();
         this.scene = new MyScene();
         this.orbit = new OrbitControls(this.camera, this.renderer.domElement);
-        this.gui = new MyController(this);
+        this.ctrl = new MyController(this);
         this.lastMove = new Date().getTime();
 
-        window.addEventListener(
-            "resize",
-            function () {
-                base.camera.aspect = window.innerWidth / window.innerHeight;
-                base.camera.updateProjectionMatrix();
-
-                base.renderer.setSize(window.innerWidth, window.innerHeight);
-            },
-            false
-        );
-        let textLoad = new FontLoader().load("font.json", function (font) {
-            base.font = font;
-        });
+        window.addEventListener("resize", this.resize.bind(this), false);
+        let textLoad = new FontLoader().load("font.json", this.loadFont.bind(this));
 
         this.loadGame();
     }
-    
-    loadGame() {
+
+    loadFont(font){
+        this.font = font;
+    }
+
+    resize() {
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
+
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    reset() {
         this.scene.reset();
-        switch (this.gui.data.Game.type) {
+        this.ctrl.reset();
+    }
+
+    loadGame() {
+        this.reset();
+        switch (this.ctrl.data.Game.type) {
             case "Maze":
                 this.game = new MazeGame(this);
                 break;
@@ -97,14 +100,13 @@ export class Base {
     animate() {
         let now = new Date().getTime();
         let delta = now - this.lastMove;
-        if (delta > this.gui.data.delayMs) {
+        if (delta > this.ctrl.data.delayMs) {
             this.lastMove = new Date().getTime();
-            
         }
     }
     render() {
-        requestAnimationFrame(base.render);
-        base.animate();
-        base.renderer.render(base.scene, base.camera);
+        requestAnimationFrame(this.render.bind(this));
+        this.animate();
+        this.renderer.render(this.scene, this.camera);
     }
 }

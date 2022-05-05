@@ -9,13 +9,14 @@
       margin: 0;
       overflow: hidden;
     }
+
     #wasd {
-				display: block;
-				position: absolute;
-				bottom: 0.3em;
-				left: 0.5em;
-				color: #fff;
-			}
+      display: block;
+      position: absolute;
+      bottom: 0.3em;
+      left: 0.5em;
+      color: #fff;
+    }
   </style>
 </head>
 
@@ -27,7 +28,14 @@
         }
       }
     </script>
-  <script type="module" src="index.js"></script>
+  <script type="module">
+    import { Base } from "./scripts/base.js";
+
+    let base = new Base();
+
+    base.render();
+
+  </script>
   <div id="wasd">
     WASD to Move
   </div>
