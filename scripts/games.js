@@ -1,9 +1,4 @@
-import {
-    Mesh,
-    MeshPhongMaterial,
-    BoxGeometry,
-    SphereGeometry,
-} from "./three.js";
+import {Maze} from './models.js';
 class Game {
     constructor(base) {
         this.scene = base.scene;
@@ -23,6 +18,24 @@ class Game {
 export class MazeGame extends Game {
     constructor(base) {
         super(base);
+        document.getElementById("MESSAGE").innerHTML = "Move with wasd or arrow keys";
+        this.buildController();
+        this.generate();
+    }
+    generate() {
+        this.maze = new Maze(this.data.config);
+
+    }
+    start(){
+        alert("start")
+    }
+    stop() {
+        alert("stop")
+    }
+    reset(){
+        alert("reset")
+    }
+    buildController() {
         this.data = {
             config: {
                 width: 10,
@@ -39,12 +52,15 @@ export class MazeGame extends Game {
                 pathLength: 0,
             },
             methods: {
-                generate: this.generate.bind(this),}
+                generate: this.generate.bind(this),
+                start: this.start.bind(this),
+                stop: this.stop.bind(this),
+                reset: this.reset.bind(this),}
         };
         this.config = this.addFolder("Config");
-        this.config.add(this.data.config, "width", 1, 50, 1).name("Width");
-        this.config.add(this.data.config, "height", 1, 50, 1).name("Height");
-        this.config.add(this.data.config, "seed", 1, 50, 1).name("Random Seed");
+        this.config.add(this.data.config, "width", 5, 50, 1).name("Width");
+        this.config.add(this.data.config, "height", 5, 50, 1).name("Height");
+        this.config.add(this.data.config, "seed").name("Random Seed");
         this.config
             .add(this.data.config, "walls", ["default", "loop", "noWall"])
             .name("Walls");
@@ -60,21 +76,21 @@ export class MazeGame extends Game {
         this.config
             .add(this.data.config, "numberOfGoals", 1, 5, 1)
             .name("Number of Goals");
+            this.config.add(this.data.methods, "generate");
+
         this.statics = this.addFolder("Statics");
         this.statics.add(this.data.statics, "steps").name("Steps").listen();
         this.statics.add(this.data.statics, "pathLength").name("Path Length").listen();
-        this.addCtrl(this.data.methods, "generate");
-    }
-    generate() {
-        alert(this.data.config.width)
+        this.control = this.addFolder("Control");
+        this.control.add(this.data.methods, "start");
+        this.control.add(this.data.methods, "stop");
+        this.control.add(this.data.methods, "reset");
+
     }
 }
 export class RubicsCubeGame extends Game {
     constructor(base) {
         super(base);
-        let geometry = new SphereGeometry();
-        let material = new MeshPhongMaterial({ color: 0xff0000 });
-        let cube = new Mesh(geometry, material);
-        this.addItem(cube);
+        document.getElementById("MESSAGE").innerHTML = "Rubics Cube is under construction";
     }
 }
